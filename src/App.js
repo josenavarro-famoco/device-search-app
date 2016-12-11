@@ -1,45 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import {
-  increment,
-  decrement,
-} from './actions';
 
-import logo from './logo.svg';
-import './App.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import NavigationBar from './components/navigationBar';
+
+import Counter from './containers/counter';
+import Device from './containers/device';
+import Login from './containers/login';
+
+import {
+  logout,
+} from './actions';
 
 class App extends Component {
   render() {
+    const { user } = this.props;
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <MuiThemeProvider>
+        <div>
+          {user && <NavigationBar user={user} onLogout={this.props.onLogout} />}
+          <div className="mui-container mui--text-center">
+            {user ?
+              <Counter /> :
+              <Login />
+            }
+          </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        {JSON.stringify(this.props.counter)}
-        <p onClick={this.props.onIncrement}>INC</p>
-        <p onClick={this.props.onDecrement}>DEC</p>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    counter: state.counter.get('counter')
+    user: state.user.get('user')
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIncrement: () => {
-      dispatch(increment());
-    },
-    onDecrement: () => {
-      dispatch(decrement());
+    onLogout: () => {
+      console.log('logout')
+      dispatch(logout());
     }
   }
 }

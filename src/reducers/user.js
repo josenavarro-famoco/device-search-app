@@ -1,9 +1,8 @@
 import { fromJS } from 'immutable';
 
-// import {
-//   INCREMENT,
-//   DECREMENT,
-// } from '../actions/constants';
+import {
+  LOGIN, LOGOUT,
+} from '../actions/constants';
 
 const initialState = fromJS({
   user: undefined,
@@ -11,6 +10,10 @@ const initialState = fromJS({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LOGIN:
+      return state.set('user', fromJS(action.payload));
+    case LOGOUT:
+      return state.set('user', undefined);
     default:
       return state;
   }
