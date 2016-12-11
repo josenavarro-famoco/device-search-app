@@ -24,7 +24,7 @@ class Device extends Component {
 const mapStateToProps = (state) => {
   return {
     text: state.device.get('searchText'),
-    information: state.device.get('deviceInformation')
+    information: state.device.get('deviceInformation'),
   }
 }
 
@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onChangeText: (text = '') => {
       dispatch(changeText(text));
-    }
+    },
   }
 }
 

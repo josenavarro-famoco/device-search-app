@@ -1,5 +1,7 @@
-export const INCREMENT = 'increment';
-export const DECREMENT = 'decrement';
-export const LOGIN = 'login';
-export const LOGOUT = 'logout';
-export const CHANGE_TEXT = 'change_text';
+export const INCREMENT = 'INCREMENT';
+export const DECREMENT = 'DECREMENT';
+export const LOGIN = 'LOGIN';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGOUT = 'LOGOUT';
+export const CHANGE_TEXT = 'CHANGE_TEXT';

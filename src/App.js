@@ -11,22 +11,44 @@ import Login from './containers/login';
 
 import {
   logout,
+  checkUserSession,
 } from './actions';
 
 class App extends Component {
+
+  componentWillMount() {
+    this.props.onPrepareApp();
+  }
+
+  renderApp = () => {
+    const { user, onLogout } = this.props;
+    return (
+      <div>
+        {user && <NavigationBar user={user} onLogout={onLogout} />}
+        <div className="mui-container mui--text-center">
+          {user ?
+            <Device /> :
+            <Login />
+          }
+        </div>
+      </div>
+    );
+  }
+
+  renderLoading = () => {
+    return (
+      <div className="progress-container">
+        <div className="progress">
+          <div className="indeterminate"></div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const { user } = this.props;
     return (
       <MuiThemeProvider>
-        <div>
-          {user && <NavigationBar user={user} onLogout={this.props.onLogout} />}
-          <div className="mui-container mui--text-center">
-            {user ?
-              <Device /> :
-              <Login />
-            }
-          </div>
-        </div>
+        {this.props.ready ? this.renderApp() : this.renderLoading()}
       </MuiThemeProvider>
     );
   }
@@ -34,14 +56,17 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user.get('user')
+    user: state.auth.get('user'),
+    ready: state.auth.get('ready'),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onPrepareApp: () => {
+      dispatch(checkUserSession());
+    },
     onLogout: () => {
-      console.log('logout')
       dispatch(logout());
     }
   }

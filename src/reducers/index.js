@@ -1,12 +1,12 @@
 import counter from './counter';
-import user from './user';
+import auth from './auth';
 import device from './device';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
   counter,
   device,
-  user,
+  auth,
 });
 
 export default rootReducer;

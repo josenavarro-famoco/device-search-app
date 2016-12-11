@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import LoginForm from '../components/loginForm';
 
 import {
-  login,
+  performLogin,
 } from '../actions';
 
 const style = {
@@ -20,6 +20,8 @@ class Login extends Component {
     return (
       <div style={style}>
         <LoginForm onLogin={this.props.onLogin}/>
+        {this.props.loading && <p>loading</p>}
+        {this.props.errors && <p>errors</p>}
       </div>
     );
   }
@@ -27,14 +29,15 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    loading: state.auth.get('loading'),
+    errors: state.auth.get('errors'),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onLogin: (username, password) => {
-      dispatch(login(username, password));
+      dispatch(performLogin(username, password));
     }
   }
 }
