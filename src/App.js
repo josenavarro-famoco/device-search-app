@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import NavigationBar from './components/navigationBar';
 
-import Counter from './containers/counter';
+// import Counter from './containers/counter';
 import Device from './containers/device';
 import Login from './containers/login';
 
@@ -22,7 +22,7 @@ class App extends Component {
           {user && <NavigationBar user={user} onLogout={this.props.onLogout} />}
           <div className="mui-container mui--text-center">
             {user ?
-              <Counter /> :
+              <Device /> :
               <Login />
             }
           </div>

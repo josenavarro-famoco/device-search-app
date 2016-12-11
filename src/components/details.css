@@ -1,0 +1,7 @@
+.details-container {
+  display: flex;
+  width: auto;
+  justify-content: center;
+  margin: 16px auto 0;
+  padding: 16px;
+}

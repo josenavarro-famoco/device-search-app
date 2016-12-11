@@ -12,6 +12,7 @@ const style = {
   position: 'absolute',
   maxWidth: 300,
 }
+
 class LoginForm extends Component {
   onSubmit = (event) => {
     this.props.onLogin('user', 'pass');

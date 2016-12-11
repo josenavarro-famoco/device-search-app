@@ -1,0 +1,21 @@
+.search-container {
+  width: 484px;
+  max-width: 484px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  margin: 16px auto 0;
+}
+
+.input {
+  width: 100%;
+  outline: none;
+  border: none;
+  padding: 16px;
+}
+
+.search {
+  margin-right: 8px;
+  height: 100% !important;
+  width: 36px !important;
+}
