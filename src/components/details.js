@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './details.css';
-import { Map, fromJS } from 'immutable';
 
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
+import Map from './map';
 
 class Details extends Component {
 
