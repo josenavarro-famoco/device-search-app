@@ -5,15 +5,17 @@ import SearchInput from '../components/searchInput';
 import Details from '../components/details';
 
 import {
-  changeText,
+  performSearchDevice,
+  searchDeviceFail,
 } from '../actions';
 
 class Device extends Component {
   render() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <SearchInput onSubmit={this.props.onChangeText} />
-        {this.props.text.length > 0 && <Details details={this.props.text} />}
+        <SearchInput onSubmit={this.props.onSearchDevice}/>
+        {this.props.loading && <p>loading</p>}
+        {this.props.errors && <Details details={this.props.errorMessage} />}
         {this.props.information.size > 0 && <Details details={this.props.information} />}
       </div>
     );
@@ -22,16 +24,24 @@ class Device extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    text: state.device.get('searchText'),
+    loading: state.device.get('loading'),
+    errors: state.device.get('errors'),
+    errorMessage: state.device.get('errorMessage'),
     information: state.device.get('deviceInformation'),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onChangeText: (text = '') => {
-      dispatch(changeText(text));
-    },
+    onSearchDevice: (id = '') => {
+      const REG_EXP = /^([a-zA-Z0-9()]+)$/mg;
+      const matchRegExp = id.match(REG_EXP);
+      if (matchRegExp !== null && matchRegExp.length === 1 && matchRegExp[0] === id) {
+        dispatch(performSearchDevice(id));
+      } else {
+        dispatch(searchDeviceFail(`Invalid value: ${id} `))
+      }
+    }
   }
 }
 

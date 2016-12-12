@@ -29,7 +29,7 @@ class SearchInput extends Component {
 
   onSubmit = (text) => {
     if (this.props.onSubmit) {
-      this.props.onSubmit(text);
+      this.props.onSubmit(text.trim());
     }
   }
 

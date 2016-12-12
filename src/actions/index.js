@@ -2,7 +2,7 @@ import {
   INCREMENT, DECREMENT,
   LOGIN, LOGIN_SUCCESS, LOGIN_FAIL,
   LOGOUT,
-  CHANGE_TEXT,
+  SEARCH_DEVICE, SEARCH_DEVICE_SUCCESS, SEARCH_DEVICE_FAIL,
 } from './constants';
 
 import {
@@ -58,19 +58,26 @@ export const logout = () => {
   }
 }
 
-export const changeText = (text = '') => {
-  const device = {
-    famoco_id: '(01)03770004396078(21)4LZ',
-    organization: {
-      id: 3,
-      name: 'Famoco Developers'
-    }
-  };
+export const searchDevice = () => {
   return {
-    type: CHANGE_TEXT,
+    type: SEARCH_DEVICE,
+  }
+}
+
+export const searchDeviceSuccess = (data) => {
+  return {
+    type: SEARCH_DEVICE_SUCCESS,
     payload: {
-      text,
-      device: text.length > 0 ? device : {},
+      data,
+    }
+  }
+}
+
+export const searchDeviceFail = (errors) => {
+  return {
+    type: SEARCH_DEVICE_FAIL,
+    payload: {
+      errors,
     }
   }
 }
@@ -93,8 +100,8 @@ export const checkUserSession = () => (dispatch) => {
       .catch((error) => {
         dispatch(loginFail(error));
       });
-    dispatch(loginSuccess());
   } else {
+    console.log(authCookies.toJS())
     dispatch(logout())
   }
 }
@@ -124,4 +131,32 @@ export const performLogin = (username, password) => (dispatch) => {
     .catch((error) => {
       dispatch(loginFail(error));
     });
+}
+
+/*
+* Device actions
+*/
+
+export const performSearchDevice = (id) => (dispatch) => {
+  dispatch(searchDevice());
+  const authCookies = getAuthenticationCookies();
+  const endpoint = `/api/1.0/devices/${id}`;
+
+  if (authCookies.size > 0 && authCookies.has('token_type') && authCookies.has('access_token')) {
+    const headers = {
+      Authorization: `${authCookies.get('token_type')} ${authCookies.get('access_token')}`,
+    }
+    request(endpoint, { headers })
+      .then((data) => {
+        console.log(data)
+        if (data.err) {
+          dispatch(searchDeviceFail(data.err.message));
+        } else {
+          dispatch(searchDeviceSuccess(data.data));
+        }
+      })
+      .catch((error) => {
+        dispatch(searchDeviceFail(error));
+      });
+  }
 }
