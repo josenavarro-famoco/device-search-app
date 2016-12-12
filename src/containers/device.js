@@ -10,7 +10,6 @@ import {
 
 class Device extends Component {
   render() {
-    console.log(this.props)
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <SearchInput onSubmit={this.props.onChangeText} />

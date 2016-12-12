@@ -11,6 +11,9 @@ import {
   removeAuthenticationCookies,
 } from '../utils';
 
+import request from '../utils/request';
+import querystring from 'querystring';
+
 export const increment = () => {
   return {
     type: INCREMENT,
@@ -29,35 +32,22 @@ export const login = () => {
   }
 }
 
-export const loginSuccess = () => {
-  const auth = {
-    access_token: 'Dx55Xm55KKypeEEhZRd4pJthiMWNxl',
-    token_type: 'Bearer',
-    expires_in: 36000,
-    refresh_token: 'NwUtuoIFMltak8kq01d7rYv0XaX5um',
-    scope: 'read write'
-  }
-  saveAuthenticationCookies(auth);
-  const current = {
-    username: 'jose.navarro@famoco.com',
-    first_name: 'Jose Miguel',
-    last_name: 'Navarro',
-    email: 'jose.navarro@famoco.com',
-    language: null
-  }
-
+export const loginSuccess = (data) => {
   return {
     type: LOGIN_SUCCESS,
     payload: {
-      data: current,
+      data,
     }
   }
 }
 
-export const loginFail = () => {
+export const loginFail = (errors) => {
   removeAuthenticationCookies();
   return {
     type: LOGIN_FAIL,
+    payload: {
+      errors,
+    }
   }
 }
 
@@ -89,24 +79,49 @@ export const changeText = (text = '') => {
 * Logic actions
 */
 
-export const performLogin = (username, password) => (dispatch) => {
-  dispatch(login());
-  const r = Math.floor((Math.random() * 10) + 1);
-  console.log(r);
-  if (r >= 5) {
+export const checkUserSession = () => (dispatch) => {
+  const authCookies = getAuthenticationCookies();
+  const endpoint = '/api/1.0/users/current/';
+  if (authCookies.size > 0 && authCookies.has('token_type') && authCookies.has('access_token')) {
+    const headers = {
+      Authorization: `${authCookies.get('token_type')} ${authCookies.get('access_token')}`,
+    }
+    request(endpoint, { headers })
+      .then((data) => {
+        dispatch(loginSuccess(data.data));
+      })
+      .catch((error) => {
+        dispatch(loginFail(error));
+      });
     dispatch(loginSuccess());
   } else {
-    dispatch(loginFail());
+    dispatch(logout())
   }
 }
 
-export const checkUserSession = () => (dispatch) => {
-  setTimeout(() => {
-    const authCookies = getAuthenticationCookies();
-    if (authCookies.size > 0) {
-      dispatch(loginSuccess());
-    } else {
-      dispatch(logout())
-    }
-  }, 1000);
+export const performLogin = (username, password) => (dispatch) => {
+  dispatch(login());
+
+  const endpoint = '/api/oauth2/token/';
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+    },
+    body: querystring.encode({
+      username: username,
+      password: password,
+      client_id: 'UrsuUnMBojaRkoQlhEyM7Qse3kirP0yswXdivLFa',
+      grant_type: 'password',
+    }),
+  }
+
+  request(endpoint, options)
+    .then((data) => {
+      saveAuthenticationCookies(data.data);
+      dispatch(checkUserSession());
+    })
+    .catch((error) => {
+      dispatch(loginFail(error));
+    });
 }
