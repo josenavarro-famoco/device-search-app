@@ -19,9 +19,7 @@ class Login extends Component {
   render() {
     return (
       <div style={style}>
-        <LoginForm onLogin={this.props.onLogin}/>
-        {this.props.loading && <p>loading</p>}
-        {this.props.errors && <p>errors</p>}
+        <LoginForm onLogin={this.props.onLogin} loading={this.props.loading} errors={this.props.errors} />
       </div>
     );
   }

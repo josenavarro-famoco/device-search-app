@@ -8,7 +8,7 @@ import {
 const initialState = fromJS({
   user: undefined,
   loading: false,
-  errors: false,
+  errors: {},
   ready: false,
 });
 
@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
     case LOGIN:
       return state
       .set('loading', true)
-      .set('errors', false);
+      .set('errors', fromJS({}));
     case LOGIN_SUCCESS:
       return state
         .set('ready', true)
@@ -26,7 +26,7 @@ export default (state = initialState, action) => {
     case LOGIN_FAIL:
       return state
         .set('loading', false)
-        .set('errors', true);
+        .set('errors', fromJS(action.payload.errors));
     case LOGOUT:
       return state
         .set('ready', true)

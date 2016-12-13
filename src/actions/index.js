@@ -125,10 +125,21 @@ export const performLogin = (username, password) => (dispatch) => {
 
   request(endpoint, options)
     .then((data) => {
-      saveAuthenticationCookies(data.data);
-      dispatch(checkUserSession());
+      console.log(data)
+      if (data.error) {
+        data.error.response.json()
+          .then((errors) => {
+            dispatch(loginFail(errors));
+          }).catch((errors) => {
+            dispatch(loginFail(errors));
+          })        
+      } else {
+        saveAuthenticationCookies(data.data);
+        dispatch(checkUserSession());
+      }
     })
     .catch((error) => {
+      console.log('catch', error)
       dispatch(loginFail(error));
     });
 }

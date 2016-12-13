@@ -3,7 +3,7 @@ import './details.css';
 
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
-import Map from './map';
+// import Map from './map';
 
 class Details extends Component {
 
