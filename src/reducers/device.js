@@ -6,7 +6,7 @@ import {
 
 const initialState = fromJS({
   loading: false,
-  errors: false,
+  errors: {},
   deviceInformation: fromJS({}),
 });
 
@@ -15,7 +15,7 @@ export default (state = initialState, action) => {
     case SEARCH_DEVICE:
       return state
         .set('loading', true)
-        .set('errors', false)
+        .set('errors', fromJS({}))
         .set('deviceInformation', fromJS({}));
     case SEARCH_DEVICE_SUCCESS:
       return state
@@ -24,8 +24,7 @@ export default (state = initialState, action) => {
     case SEARCH_DEVICE_FAIL:
       return state
         .set('loading', false)
-        .set('errors', true)
-        .set('errorMessage', action.payload.errors);
+        .set('errors', fromJS(action.payload.errors));
     default:
       return state;
   }

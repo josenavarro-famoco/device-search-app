@@ -3,6 +3,7 @@ import './searchInput.css';
 
 import Paper from 'material-ui/Paper';
 import Search from 'material-ui/svg-icons/action/search';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class SearchInput extends Component {
 
@@ -37,7 +38,10 @@ class SearchInput extends Component {
     return (
       <Paper className="search-container" >
         <input className="input" onChange={this.onChange} onKeyPress={this.onKeyPress} />
-        <Search className="search" onTouchTap={this.onButtonClick} />
+        {this.props.loading ?
+          <CircularProgress /> :
+          <Search className="search" onTouchTap={this.onButtonClick} />
+        }
       </Paper>
     );
   }

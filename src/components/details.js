@@ -67,7 +67,7 @@ class Details extends Component {
 
   render() {
     return (
-      <Paper className="details-container" >
+      <Paper className="details-container">
         {this.renderContent(this.props.details)}
       </Paper>
     );

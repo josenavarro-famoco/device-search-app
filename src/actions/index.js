@@ -101,7 +101,6 @@ export const checkUserSession = () => (dispatch) => {
         dispatch(loginFail(error));
       });
   } else {
-    console.log(authCookies.toJS())
     dispatch(logout())
   }
 }
@@ -125,21 +124,19 @@ export const performLogin = (username, password) => (dispatch) => {
 
   request(endpoint, options)
     .then((data) => {
-      console.log(data)
       if (data.error) {
         data.error.response.json()
           .then((errors) => {
             dispatch(loginFail(errors));
           }).catch((errors) => {
             dispatch(loginFail(errors));
-          })        
+          })
       } else {
         saveAuthenticationCookies(data.data);
         dispatch(checkUserSession());
       }
     })
     .catch((error) => {
-      console.log('catch', error)
       dispatch(loginFail(error));
     });
 }
@@ -159,9 +156,13 @@ export const performSearchDevice = (id) => (dispatch) => {
     }
     request(endpoint, { headers })
       .then((data) => {
-        console.log(data)
-        if (data.err) {
-          dispatch(searchDeviceFail(data.err.message));
+        if (data.error) {
+          data.error.response.json()
+            .then((error) => {
+              dispatch(searchDeviceFail(error.errors));
+            }).catch((error) => {
+              dispatch(searchDeviceFail(error));
+            })
         } else {
           dispatch(searchDeviceSuccess(data.data));
         }
